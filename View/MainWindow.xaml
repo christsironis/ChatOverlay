@@ -6,28 +6,46 @@
         xmlns:local="clr-namespace:ChatOverlay" 
         xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="ChatOverlay" Height="400" Width="400" Topmost="true" Opacity="1">
-    <Grid x:Name="main">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        MouseDown="Window_MouseDown"
+        Background="Transparent"
+        Topmost="true" Opacity="1" 
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip"        
+        Title="ChatOverlay" Height="600" Width="400" MinWidth="200" MinHeight="200">
+    <Border CornerRadius="0" Background="Transparent" BorderBrush="Transparent" BorderThickness="1">
+        <Grid x:Name="main" Background="Transparent" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid VerticalAlignment="Center" x:Name="menuLine" Grid.Row="0" Margin="0,0,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="20" />
-            </Grid.ColumnDefinitions>
+            <Border CornerRadius="5,5,0,0" Background="Black" BorderBrush="Black" BorderThickness="0"  Grid.Row="0">
 
-            <TextBox x:Name="url" Text="{Binding ElementName=Browser, Path=Address, Mode=TwoWay}" KeyDown="url_KeyDown" VerticalContentAlignment="Center" Grid.Column="0"/>
-            <Button x:Name="back" Grid.Column="2" Margin="0,0,0,0" Click="back_Click" Background="Transparent" BorderThickness="0">Back</Button>
-            <Button x:Name="forward" Grid.Column="3" Margin="0,0,0,0" Click="forward_Click" Background="Transparent" BorderThickness="0">Forward</Button>
-            <Button x:Name="settings" Grid.Column="4" Margin="0,0,0,0" Click="settings_Click" Background="Transparent" BorderThickness="0">⚙</Button>
+                <Grid x:Name="menuLine" Margin="0,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="url"     Grid.Column="0" BorderThickness="0" Text="{Binding ElementName=Browser, Path=Address, Mode=TwoWay}" KeyDown="url_KeyDown" VerticalContentAlignment="Center"/>
+                    <Button x:Name="back"     Grid.Column="1" Click="back_Click" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand">↩</Button>
+                    <Button x:Name="forward"  Grid.Column="2" Click="forward_Click" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand">↪</Button>
+                    <Button x:Name="settings" Grid.Column="3" Click="settings_Click" Background="Transparent" BorderThickness="0" Cursor="Hand">⚙</Button>
+                    <Button x:Name="minimize" Grid.Column="5" Click="minimize_Click" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand">_</Button>
+                    <Button x:Name="restore"  Grid.Column="6" Click="restore_Click" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand">[ ]</Button>
+                    <Button x:Name="close"    Grid.Column="7" Click="close_Click" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand">⨉</Button>
+
+                </Grid>
+            </Border>
+            <wpf:ChromiumWebBrowser Grid.Row="1" x:Name="Browser" Address="https://www.twitch.tv/popout/elajjaz/chat?popout=" FrameLoadEnd="Browser_FrameLoadEnd"  AddressChanged="Browser_AddressChanged">
+            </wpf:ChromiumWebBrowser>
         </Grid>
-        <wpf:ChromiumWebBrowser Grid.Row="1" x:Name="Browser" Address="https://www.twitch.tv/popout/elajjaz/chat?popout=" FrameLoadEnd="Browser_FrameLoadEnd"  AddressChanged="Browser_AddressChanged">
-        </wpf:ChromiumWebBrowser>
-    </Grid>
+    </Border>
 </Window>
