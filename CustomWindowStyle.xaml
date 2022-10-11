@@ -1,0 +1,82 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ChatOverlay">
+    <Style TargetType="{x:Type local:CustomWindow}" x:Key="CustomWindowStyle">
+
+        <Style.Resources>
+            <SolidColorBrush x:Key="BorderBrush" Color="Red"></SolidColorBrush>
+            <SolidColorBrush x:Key="CaptionBackgroundBrush" Color="Yellow"></SolidColorBrush>
+            <SolidColorBrush x:Key="CaptionForegroundBrush" Color="White"></SolidColorBrush>
+            <local:MaximizeVisibilityConverter x:Key="MaximizeVisibilityConverter"/>
+            <local:MinimizeVisibilityConverter x:Key="MinimizeVisibilityConverter"/>
+        </Style.Resources>
+        
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="AllowsTransparency" Value="true"/>
+        <Setter Property="MinWidth" Value="200"/>
+        <Setter Property="MinHeight" Value="200"/>
+        <Setter Property="WindowStyle" Value="none"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local: CustomWindow}" x:Name="PART_WindowTemplate">
+                    <Grid x:Name="PART_WindowFrame">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2" />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="2" />
+                        </Grid.RowDefinitions>
+
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderLeft" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"/>
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderTopLeft" Grid.Column="0" Grid.Row="0"/>
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderTop" Grid.Column="1" Grid.Row="0"/>
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderTopRight" Grid.Column="2" Grid.Row="0"/>
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderRight" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"/>
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderBottomRight" Grid.Column="2" Grid.Row="3"/>
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderBottom" Grid.Column="1" Grid.Row="3"/>
+                        <Border Background="{DynamicResource BorderBrush}" x:Name="PART_WindowBorderBottomLeft" Grid.Column="0" Grid.Row="3"/>
+
+                        <Border x:Name="PART_WindowCaption" Grid.Column="1" Grid.Row="1" Background="{DynamicResource CaptionBackgroundBrush}">
+                            <DockPanel LastChildFill="True">
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button x:Name="PART_WindowCaptionMinimizeButton"
+                                            Visibility="{TemplateBinding ResizeMode, Converter={StaticResource MinimizeVisibilityConverter}}"
+                                            Content="_"
+                                            Margin="0,0,4,0"/>
+                                    <Button x:Name="PART_WindowCaptionMaximizeButton"
+                                            Visibility="{TemplateBinding ResizeMode, Converter={StaticResource MaximizeVisibilityConverter}}"
+                                            Content="[ ]"
+                                            Margin="0,0,4,0"/>
+                                    <Button x:Name="PART_WindowCaptionCloseButton"
+                                            Content="⨉"/>
+                                </StackPanel>
+                                <TextBlock x:Name="PART_WindowCaptionText" DockPanel.Dock="Left" Margin="6,0,0,0" Padding="0">
+                                    <Image x:Name="PART_WinodwCaptionIcon"
+                                           Width="16"
+                                           Height="16"
+                                           Margin="0,0,6,0"
+                                           Source="{TemplateBinding Icon}"
+                                           SnapsToDevicePixels="True"
+                                           RenderOptions.EdgeMode="Aliased"/>
+                                    <Run BaselineAlignment="Center"
+                                         Text="{TemplateBinding Title}"
+                                         Foreground="{DynamicResource CaptionForegroundBrush}"/>
+                                </TextBlock>
+                            </DockPanel>
+                        </Border>
+
+                        <DockPanel Grid.Column="2" Grid.Row="1">
+                            <ContentPresenter/>
+                        </DockPanel>
+                        
+                        </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
