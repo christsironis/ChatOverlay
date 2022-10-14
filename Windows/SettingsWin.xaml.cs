@@ -88,8 +88,8 @@ namespace ChatOverlay
             username.Text = Properties.Settings.Default.Username;
             comboCss.Text = Properties.Settings.Default.ComboCss;
             comboJs.Text = Properties.Settings.Default.ComboJs;
-            cssText.Text = css[Properties.Settings.Default.ComboCss];
-            jsText.Text = js[Properties.Settings.Default.ComboJs];
+            cssText.Text = css.ContainsKey(Properties.Settings.Default.ComboCss) ? css[Properties.Settings.Default.ComboCss] : "";
+            jsText.Text = js.ContainsKey(Properties.Settings.Default.ComboJs) ? js[Properties.Settings.Default.ComboJs] : "";
         }
 
         private void ChatFade_PreviewTextInput(object sender, TextCompositionEventArgs e)

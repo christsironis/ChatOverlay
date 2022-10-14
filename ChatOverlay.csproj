@@ -129,7 +129,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Custom_CSS_JS.xml" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\chat.ico" />
   </ItemGroup>

@@ -12,7 +12,7 @@ namespace ChatOverlay
 {
     internal class StoreData
     {
-        public static string filename = System.AppDomain.CurrentDomain.BaseDirectory + "/Custom_CSS_JS.xml";
+        public static string filename = "Custom_CSS_JS.xml";
         public static void Store(Dictionary<string, string> css, Dictionary<string, string> js)
         {
             var xdec = new XDeclaration("1.0", "utf-8", "yes");
@@ -27,6 +27,8 @@ namespace ChatOverlay
         }
         public static Dictionary<string, Dictionary<string, string>> Retrieve()
         {
+            //if (!File.Exists(filename)) StoreData.Store(new Dictionary<string, string>() { { "None", "" }}, new Dictionary<string, string> () { { "None", "" } });
+
             XDocument doc = XDocument.Load(filename);
             Dictionary<string, string> css = new Dictionary<string, string>();
             Dictionary<string, string> js = new Dictionary<string, string>();

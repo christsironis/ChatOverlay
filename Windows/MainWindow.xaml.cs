@@ -71,9 +71,9 @@ namespace ChatOverlay
                 Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
                 url.Text = Properties.Settings.Default.Username;
             }
-            else if (Properties.Settings.Default.ChatType == "Twitch")
+            else if (Properties.Settings.Default.ChatType == "Trovo")
             {
-                Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
+                Browser.Address = $"https://trovo.live/chat/{Properties.Settings.Default.Username}";
                 url.Text = Properties.Settings.Default.Username;
             }
             else
@@ -121,10 +121,10 @@ namespace ChatOverlay
                     Properties.Settings.Default.Username = url.Text;
                     Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
                 }
-                else if (Properties.Settings.Default.ChatType == "Twitch")
+                else if (Properties.Settings.Default.ChatType == "Trovo")
                 {
                     Properties.Settings.Default.Username = url.Text;
-                    Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
+                    Browser.Address = $"https://trovo.live/chat/{Properties.Settings.Default.Username}";
                 }
                 else
                 {
