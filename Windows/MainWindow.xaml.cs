@@ -35,7 +35,52 @@ namespace ChatOverlay
         public MainWindow()
         {
             InitializeComponent();
+            ChangeUrlOnChatType();
 
+        }
+        private string InsertCustomCSS(string CSS)
+        {
+            string uriEncodedCSS = Uri.EscapeDataString(CSS);
+            string script = "const ttcCSS = document.createElement('style');";
+            script += "ttcCSS.innerHTML = decodeURIComponent(\"" + uriEncodedCSS + "\");";
+            script += "document.querySelector('head').appendChild(ttcCSS);";
+            return script;
+        }
+
+        private void InsertCustomJavaScript(string JS)
+        {
+            try
+            {
+                JS = "document.addEventListener(\"DOMContentLoaded\", function() { " + JS + "});";
+                this.Browser.ExecuteScriptAsync(JS);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        public void ChangeUrlOnChatType()
+        {
+            if (Properties.Settings.Default.ChatType == "KapChat - Twitch")
+            {
+                Browser.Address = $"https://nightdev.com/hosted/obschat?theme={Properties.Settings.Default.KapchatTheme}&channel={Properties.Settings.Default.Username}&fade={Properties.Settings.Default.ChatFade}&bot_activity={Properties.Settings.Default.ShowBots}&prevent_clipping=false";
+                url.Text = Properties.Settings.Default.Username;
+            }
+            else if (Properties.Settings.Default.ChatType == "Twitch")
+            {
+                Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
+                url.Text = Properties.Settings.Default.Username;
+            }
+            else if (Properties.Settings.Default.ChatType == "Twitch")
+            {
+                Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
+                url.Text = Properties.Settings.Default.Username;
+            }
+            else
+            {
+                Browser.Address = Properties.Settings.Default.CustomUrl; 
+                url.Text = Properties.Settings.Default.CustomUrl;
+            }
         }
 
         private void back_Click(object sender, RoutedEventArgs e)
@@ -43,60 +88,51 @@ namespace ChatOverlay
             if (Browser.CanGoBack)
             {
                 Browser.Back();
+                url.Text = Browser.Address;
             }
         }
 
         private void forward_Click(object sender, RoutedEventArgs e)
         {
-            if (Browser.CanGoBack)
+            if (Browser.CanGoForward)
             {
                 Browser.Forward();
+                url.Text = Browser.Address;
             }
         }
 
         private void settings_Click(object sender, RoutedEventArgs e)
         {
-
+            SettingsWin settingsWin = new SettingsWin( this );
+            settingsWin.Show();
         }
 
         private void url_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                Browser.Load( url.Text );
+                if (Properties.Settings.Default.ChatType == "KapChat - Twitch")
+                {
+                    Properties.Settings.Default.Username = url.Text;
+                    Browser.Address = $"https://nightdev.com/hosted/obschat?theme={Properties.Settings.Default.KapchatTheme}&channel={Properties.Settings.Default.Username}&fade={Properties.Settings.Default.ChatFade}&bot_activity={Properties.Settings.Default.ShowBots}&prevent_clipping=false";
+                }
+                else if (Properties.Settings.Default.ChatType == "Twitch")
+                {
+                    Properties.Settings.Default.Username = url.Text;
+                    Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
+                }
+                else if (Properties.Settings.Default.ChatType == "Twitch")
+                {
+                    Properties.Settings.Default.Username = url.Text;
+                    Browser.Address = $"https://www.twitch.tv/popout/{Properties.Settings.Default.Username}/chat?popout=";
+                }
+                else
+                {
+                    Properties.Settings.Default.CustomUrl = url.Text;
+                    Browser.Address = Properties.Settings.Default.CustomUrl;
+                }
             }
         }
-
-        private void Set_Browser_Buttons_State()
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                if (Browser.CanGoForward)
-                {
-                    forward.Opacity = 1;
-
-                }
-                else
-                {
-                    forward.Opacity = 0.6;
-                }
-                if (Browser.CanGoBack)
-                {
-                    back.Opacity = 1;
-
-                }
-                else
-                {
-                    back.Opacity = 0.6;
-                }
-            });
-        }
-
-        private void Browser_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
-        {
-            //Set_Browser_Buttons_State();
-        }
-
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -133,13 +169,16 @@ namespace ChatOverlay
             if (border.Visibility == Visibility.Visible)
             {
                 border.Visibility = Visibility.Hidden;
+                topBorder.BorderThickness = new Thickness(0);
+                mainContent.BorderThickness = new Thickness(0);
                 MainWindow.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
             }
             else
             {
                 border.Visibility = Visibility.Visible;
+                topBorder.BorderThickness = new Thickness(0,10,0,0);
+                mainContent.BorderThickness = new Thickness(2);
                 SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & ~WS_EX_TRANSPARENT);
-
             }
         }
 
@@ -202,5 +241,16 @@ namespace ChatOverlay
 
         }
 
+        private void Browser_FrameLoadStart(object sender, FrameLoadStartEventArgs e)
+        {
+
+            InsertCustomJavaScript(InsertCustomCSS(Properties.Settings.Default.currentCss));
+            InsertCustomJavaScript(Properties.Settings.Default.currentJs);
+        }
+        private void Browser_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
+        {
+            //InsertCustomJavaScript(InsertCustomCSS(Properties.Settings.Default.currentCss));
+            //InsertCustomJavaScript(Properties.Settings.Default.currentJs);
+        }
     }
 }

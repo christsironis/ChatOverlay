@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         MouseDown="Window_MouseDown"
         Background="Transparent"
-        Topmost="False"
+        Topmost="True"
         WindowStyle="None"
         AllowsTransparency="True"
         ResizeMode="CanResizeWithGrip"  
@@ -211,7 +211,7 @@
 
     </Window.Resources>
 
-    <Border ContextMenu="{StaticResource contextMenu}" CornerRadius="5,5,0,0" BorderThickness="0,10,0,0" BorderBrush="Transparent" Background="Transparent" >
+    <Border Name="topBorder" ContextMenu="{StaticResource contextMenu}" CornerRadius="5,5,0,0" BorderThickness="0,10,0,0" BorderBrush="Black" Background="Transparent" >
         <Grid x:Name="main" Background="Transparent" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="32.767" />
@@ -232,7 +232,7 @@
                 </tb:TaskbarIcon.ContextMenu>
             </tb:TaskbarIcon>
 
-            <Border Name="border" Background="Black" BorderBrush="Black" BorderThickness="2"  Grid.Row="0" Grid.RowSpan="2">
+            <Border Name="border" Background="Black" BorderBrush="Black" BorderThickness="1"  Grid.Row="0" Grid.RowSpan="2">
 
                 <Grid x:Name="menuLine" Margin="0,0,0,0">
                     <Grid.RowDefinitions>
@@ -267,15 +267,18 @@
                             <ColumnDefinition Width="40" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox x:Name="url"     Grid.Column="0" Text="{Binding ElementName=Browser, Path=Address, Mode=TwoWay}" KeyDown="url_KeyDown" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="url"     Grid.Column="0" KeyDown="url_KeyDown" VerticalContentAlignment="Center"/>
                         <Button x:Name="back"     Grid.Column="1" Click="back_Click" Style="{StaticResource button}">↩</Button>
                         <Button x:Name="forward"  Grid.Column="2" Click="forward_Click" Style="{StaticResource button}">↪</Button>
                     </Grid>
 
                 </Grid>
             </Border>
-            <wpf:ChromiumWebBrowser Grid.Row="2" x:Name="Browser" ZoomLevelIncrement="1" Address="https://www.twitch.tv/popout/elajjaz/chat?popout=" FrameLoadEnd="Browser_FrameLoadEnd"  AddressChanged="Browser_AddressChanged">
-            </wpf:ChromiumWebBrowser>
+            <Border Grid.Row="2" x:Name="mainContent" BorderBrush="Black" BorderThickness="2,0,2,2">
+                <wpf:ChromiumWebBrowser x:Name="Browser" ZoomLevelIncrement="1" FrameLoadEnd="Browser_FrameLoadEnd" FrameLoadStart="Browser_FrameLoadStart"  AddressChanged="Browser_AddressChanged">
+                </wpf:ChromiumWebBrowser>
+            </Border>
+            
         </Grid>
     </Border>
 </Window>

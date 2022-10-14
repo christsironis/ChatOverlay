@@ -1,0 +1,129 @@
+﻿<Window x:Class="ChatOverlay.SettingsWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatOverlay" 
+        Topmost="True"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="800">
+    <Window.Resources>
+        <local:ChatTypeConverter x:Key="chatTypeConverter" />
+        <local:CustomUrlConverter x:Key="customUrlConverter" />
+        <local:UsernameConverter x:Key="usernameConverter" />
+        <local:DeleteComboBoxConverter  x:Key="deleteComboBoxConverter" />
+        <local:AddComboBoxConverter  x:Key="addComboBoxConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".5*"  />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height=".35*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Name="chatTypeGrid" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Content="Chat Type" HorizontalContentAlignment="Center"/>
+            <ComboBox Name="ChatType" Grid.Column="1" Margin="0,0,0,0" Width="150" SelectionChanged="ChatType_SelectionChanged" >
+                <ComboBoxItem Name="KapChatTwitch" Content="KapChat - Twitch"/>
+                <ComboBoxItem Name="Twicth" Content="Twitch"/>
+                <ComboBoxItem Name="Trovo" Content="Trovo"/>
+                <ComboBoxItem Name="CustomType" Content="Custom"/>
+            </ComboBox>
+        </Grid>
+        <DockPanel Visibility="{Binding SelectionBoxItem, ElementName=ChatType, Converter={StaticResource usernameConverter}}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+            <Label Content="Username" HorizontalAlignment="Left" FontWeight="Bold"/>
+            <Border>
+                <TextBox Name="username" VerticalAlignment="Center" Margin="20,0,20,0" FontSize="16"></TextBox>
+            </Border>
+        </DockPanel>
+        <DockPanel Visibility="{Binding SelectionBoxItem, ElementName=ChatType, Converter={StaticResource customUrlConverter}}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="CustomUrl" HorizontalAlignment="Left" FontWeight="Bold"/>
+            <Border>
+                <TextBox Name="CustomUrl" VerticalAlignment="Center" Margin="20,0,20,0" Width="500" FontSize="16"></TextBox>
+            </Border>
+        </DockPanel>
+        <Grid Name="kapChatGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" MaxWidth="700" Visibility="{Binding SelectionBoxItem, ElementName=ChatType, Converter={StaticResource chatTypeConverter}}" VerticalAlignment="Center" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Label Content="Chat Fade" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Margin="20,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+            <TextBox Name="ChatFade" VerticalContentAlignment="Center" Text="0" PreviewTextInput="ChatFade_PreviewTextInput" Grid.Row="0" Grid.Column="1" Margin="20,0,20,0" />
+            
+            <Label Content="Show Bots" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Margin="20,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+            <CheckBox Name="sBots" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="20,0,0,0" Content="Show bot messages." />
+
+            <Label Content="KapChat Theme" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+            <ComboBox Name="KapChatTheme" Grid.Row="0" Grid.Column="3" Margin="20,0,40,0" >
+                <ComboBoxItem IsSelected="True"  Content="None" />
+                <ComboBoxItem Content="BetterTTV's &quot;Black Chat&quot;" />
+                <ComboBoxItem Content="BetterTTV Dark" />
+                <ComboBoxItem Content="BetterTTV Light" />
+                <ComboBoxItem Content="Dark" />
+                <ComboBoxItem Content="Light" />
+                <ComboBoxItem Content="S0N0S' 1080P" />
+                <ComboBoxItem Content="S0N0S' 1440P" />
+            </ComboBox>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0" Name="CustomCss">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                    <Label VerticalContentAlignment="Center" Content="Custom Css"></Label>
+                    <ComboBox Name="comboCss" SelectionChanged="comboCss_SelectionChanged" Margin="10,0,10,0" Width="100" VerticalAlignment="Center" >
+                    </ComboBox>
+                    <Button Click="Delete_Css_Item" Visibility="{Binding SelectionBoxItem, ElementName=comboCss, Converter={StaticResource deleteComboBoxConverter}}" VerticalContentAlignment="Center" Padding="5,0,5,0" Margin="10,0,10,0">Delete</Button>
+                </DockPanel>
+                <DockPanel Visibility="{Binding SelectionBoxItem, ElementName=comboCss, Converter={StaticResource addComboBoxConverter}}" HorizontalAlignment="Center">
+                    <TextBox Name="newCssName" Height="20" Width="150" Margin="10,10,10,0" />
+                    <Button Click="Add_Css_Item" VerticalContentAlignment="Center" Margin="10,10,10,0" Height="20" Padding="5,0,5,0">Add</Button>
+                </DockPanel>
+            </StackPanel>
+            <TextBox Name="cssText" Grid.Row="1" Margin="10,10,10,0" AcceptsReturn="True" TextChanged="cssText_TextChanged"></TextBox>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="1" Name="CustomJs">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                    <Label VerticalContentAlignment="Center" Content="Custom Js"></Label>
+                    <ComboBox Name="comboJs" SelectionChanged="comboJs_SelectionChanged" Margin="20,0,10,0" Width="100" VerticalAlignment="Center" >
+                    </ComboBox>
+                    <Button Click="Delete_Js_Item" Visibility="{Binding SelectionBoxItem, ElementName=comboJs, Converter={StaticResource deleteComboBoxConverter}}" VerticalContentAlignment="Center" Padding="5,0,5,0" Margin="10,0,10,0">Delete</Button>
+                </DockPanel>
+                <DockPanel Visibility="{Binding SelectionBoxItem, ElementName=comboJs, Converter={StaticResource addComboBoxConverter}}" HorizontalAlignment="Center">
+                    <TextBox Name="newJsName" Height="20" Width="150" Margin="10,10,10,0" />
+                    <Button Click="Add_Js_Item" VerticalContentAlignment="Center" Margin="10,10,10,0" Height="20" Padding="5,0,5,0">Add</Button>
+                </DockPanel>
+            </StackPanel>
+            <TextBox Name="jsText" Grid.Row="1" Margin="10,10,10,0" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="jsText_TextChanged"></TextBox>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right">
+            <Button Name="cancel" Cursor="Hand" Height="25" Padding="20,0,20,0" Margin="0,0,20,0" Click="cancel_Click">Cancel</Button>
+            <Button Name="apply" Cursor="Hand" Height="25" Padding="20,0,20,0" Margin="0,0,20,0" Click="apply_Click">Apply</Button>
+        </StackPanel>
+    </Grid>
+</Window>
