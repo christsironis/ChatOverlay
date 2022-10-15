@@ -21,7 +21,6 @@ namespace ChatOverlay
             JumpTask task = new JumpTask
             {
                 Title = "New Window",
-                Arguments = "/NewWindow_Click",
                 CustomCategory = "Actions",
                 IconResourcePath = Assembly.GetEntryAssembly().CodeBase,
                 ApplicationPath = Assembly.GetEntryAssembly().CodeBase
@@ -29,8 +28,8 @@ namespace ChatOverlay
 
             JumpList jumpList = new JumpList();
             jumpList.JumpItems.Add(task);
-            jumpList.ShowFrequentCategory = false;
-            jumpList.ShowRecentCategory = false;
+            jumpList.ShowFrequentCategory = true;
+            jumpList.ShowRecentCategory = true;
 
             JumpList.SetJumpList(Application.Current, jumpList);
         }

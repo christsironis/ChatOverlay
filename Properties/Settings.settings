@@ -32,5 +32,8 @@
     <Setting Name="currentJs" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ContentBackground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

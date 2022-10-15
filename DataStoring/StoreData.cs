@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Markup;
 using System.Xml.Linq;
 
 namespace ChatOverlay
@@ -33,9 +27,9 @@ namespace ChatOverlay
             Dictionary<string, string> css = new Dictionary<string, string>();
             Dictionary<string, string> js = new Dictionary<string, string>();
 
-            foreach (XElement element in doc.Descendants() )
+            foreach (XElement element in doc.Descendants())
             {
-                if( element.Name == "css")
+                if (element.Name == "css")
                 {
                     foreach (XElement elem in element.Descendants())
                     {
@@ -52,7 +46,7 @@ namespace ChatOverlay
 
             }
             Dictionary<string, Dictionary<string, string>> data = new Dictionary<string, Dictionary<string, string>>();
-            data.Add("css",css);
+            data.Add("css", css);
             data.Add("js", js);
             return data;
         }

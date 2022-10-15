@@ -16,7 +16,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height=".5*"  />
+            <RowDefinition Height="*"  />
             <RowDefinition Height="*"/>
             <RowDefinition Height="3*" />
             <RowDefinition Height=".35*" />
@@ -26,19 +26,24 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Name="chatTypeGrid" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,0">
+        <Grid Name="chatTypeGrid" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"  Margin="30,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
-            <Label Grid.Column="0" Content="Chat Type" HorizontalContentAlignment="Center"/>
-            <ComboBox Name="ChatType" Grid.Column="1" Margin="0,0,0,0" Width="150" SelectionChanged="ChatType_SelectionChanged" >
-                <ComboBoxItem Name="KapChatTwitch" Content="KapChat - Twitch"/>
-                <ComboBoxItem Name="Twicth" Content="Twitch"/>
-                <ComboBoxItem Name="Trovo" Content="Trovo"/>
-                <ComboBoxItem Name="CustomType" Content="Custom"/>
-            </ComboBox>
+            <StackPanel Grid.Column="0" >
+                <Label Content="Chat Type" HorizontalContentAlignment="Center"/>
+                <ComboBox Name="ChatType" Margin="0,0,0,0" Width="150" SelectionChanged="ChatType_SelectionChanged" >
+                    <ComboBoxItem Name="KapChatTwitch" Content="KapChat - Twitch"/>
+                    <ComboBoxItem Name="Twicth" Content="Twitch"/>
+                    <ComboBoxItem Name="Trovo" Content="Trovo"/>
+                    <ComboBoxItem Name="CustomType" Content="Custom"/>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Margin="20,0,0,0" Grid.Column="1">
+                <Label Content="Background Color" HorizontalContentAlignment="Center"/>
+                <TextBox Name="backgroundColorString" Width="100" />
+            </StackPanel>
         </Grid>
         <DockPanel Visibility="{Binding SelectionBoxItem, ElementName=ChatType, Converter={StaticResource usernameConverter}}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
             <Label Content="Username" HorizontalAlignment="Left" FontWeight="Bold"/>
@@ -66,7 +71,7 @@
 
             <Label Content="Chat Fade" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Margin="20,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
             <TextBox Name="ChatFade" VerticalContentAlignment="Center" Text="0" PreviewTextInput="ChatFade_PreviewTextInput" Grid.Row="0" Grid.Column="1" Margin="20,0,20,0" />
-            
+
             <Label Content="Show Bots" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Margin="20,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
             <CheckBox Name="sBots" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="20,0,0,0" Content="Show bot messages." />
 
@@ -99,7 +104,7 @@
                     <Button Click="Add_Css_Item" VerticalContentAlignment="Center" Margin="10,10,10,0" Height="20" Padding="5,0,5,0">Add</Button>
                 </DockPanel>
             </StackPanel>
-            <TextBox Name="cssText" Grid.Row="1" Margin="10,10,10,0" AcceptsReturn="True" TextChanged="cssText_TextChanged"></TextBox>
+            <TextBox Name="cssText" Grid.Row="1" VerticalScrollBarVisibility="Visible" Margin="10,10,10,0" AcceptsReturn="True" TextWrapping="Wrap" TextChanged="cssText_TextChanged"></TextBox>
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="1" Name="CustomJs">
@@ -119,7 +124,7 @@
                     <Button Click="Add_Js_Item" VerticalContentAlignment="Center" Margin="10,10,10,0" Height="20" Padding="5,0,5,0">Add</Button>
                 </DockPanel>
             </StackPanel>
-            <TextBox Name="jsText" Grid.Row="1" Margin="10,10,10,0" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="jsText_TextChanged"></TextBox>
+            <TextBox Name="jsText" Grid.Row="1" VerticalScrollBarVisibility="Visible" Margin="10,10,10,0" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="jsText_TextChanged"></TextBox>
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right">
             <Button Name="cancel" Cursor="Hand" Height="25" Padding="20,0,20,0" Margin="0,0,20,0" Click="cancel_Click">Cancel</Button>

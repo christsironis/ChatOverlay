@@ -1,20 +1,13 @@
 ﻿using CefSharp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace ChatOverlay
 {
@@ -23,6 +16,7 @@ namespace ChatOverlay
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region ForTransparence
         public const int WS_EX_TRANSPARENT = 0x00000020;
         public const int GWL_EXSTYLE = (-20);
 
@@ -32,11 +26,22 @@ namespace ChatOverlay
         [DllImport("user32.dll")]
         public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
+        public string previousUsername = Properties.Settings.Default.Username;
+        public bool navigationUsed = false;
+        public byte bcOpacity = 0;
+
+        #endregion
         public MainWindow()
         {
             InitializeComponent();
-            ChangeUrlOnChatType();
+            Color bgColor = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.ContentBackground);
+            mainContent.Background = new SolidColorBrush(RGBConverter(bgColor, bcOpacity));
+            ApplySettings();
 
+        }
+        private static Color RGBConverter(System.Windows.Media.Color c, byte opacity)
+        {
+            return Color.FromArgb( opacity, c.R, c.G, c.B );
         }
         private string InsertCustomCSS(string CSS)
         {
@@ -59,7 +64,7 @@ namespace ChatOverlay
                 MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        public void ChangeUrlOnChatType()
+        public void ApplySettings()
         {
             if (Properties.Settings.Default.ChatType == "KapChat - Twitch")
             {
@@ -78,17 +83,20 @@ namespace ChatOverlay
             }
             else
             {
-                Browser.Address = Properties.Settings.Default.CustomUrl; 
+                Browser.Address = Properties.Settings.Default.CustomUrl;
                 url.Text = Properties.Settings.Default.CustomUrl;
             }
+
+            Color bgColor = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.ContentBackground);
+            mainContent.Background = new SolidColorBrush(RGBConverter(bgColor, bcOpacity));
         }
 
         private void back_Click(object sender, RoutedEventArgs e)
         {
             if (Browser.CanGoBack)
             {
+                navigationUsed = true;
                 Browser.Back();
-                url.Text = Browser.Address;
             }
         }
 
@@ -96,14 +104,14 @@ namespace ChatOverlay
         {
             if (Browser.CanGoForward)
             {
-                Browser.Forward();
-                url.Text = Browser.Address;
+                navigationUsed = true;
+                Browser.Forward();;
             }
         }
 
         private void settings_Click(object sender, RoutedEventArgs e)
         {
-            SettingsWin settingsWin = new SettingsWin( this );
+            SettingsWin settingsWin = new SettingsWin(this);
             settingsWin.Show();
         }
 
@@ -111,6 +119,8 @@ namespace ChatOverlay
         {
             if (e.Key == Key.Enter)
             {
+                previousUsername = Properties.Settings.Default.Username;
+
                 if (Properties.Settings.Default.ChatType == "KapChat - Twitch")
                 {
                     Properties.Settings.Default.Username = url.Text;
@@ -156,6 +166,7 @@ namespace ChatOverlay
         private void close_Click(object sender, RoutedEventArgs e)
         {
             taskbarIcon.Visibility = Visibility.Collapsed;
+            Browser.Dispose();
             this.Close();
         }
 
@@ -176,7 +187,7 @@ namespace ChatOverlay
             else
             {
                 border.Visibility = Visibility.Visible;
-                topBorder.BorderThickness = new Thickness(0,10,0,0);
+                topBorder.BorderThickness = new Thickness(0, 10, 0, 0);
                 mainContent.BorderThickness = new Thickness(2);
                 SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & ~WS_EX_TRANSPARENT);
             }
@@ -196,19 +207,43 @@ namespace ChatOverlay
         }
         private void OpacityMore_Click(object sender, RoutedEventArgs e)
         {
-            Browser.Opacity += 0.05;
+            Browser.Opacity += 0.1;
         }
         private void OpacityLess_Click(object sender, RoutedEventArgs e)
         {
-            Browser.Opacity -= 0.05;
+            Browser.Opacity -= 0.1;
         }
         private void OpacityReset_Click(object sender, RoutedEventArgs e)
         {
             Browser.Opacity = 1;
         }
+        private void BackgroundOpacityMore_Click(object sender, RoutedEventArgs e)
+        {
+            if (bcOpacity >= 250)
+                bcOpacity = 255;
+            else
+                bcOpacity += 25;
+            Color bgColor = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.ContentBackground);
+            mainContent.Background = new SolidColorBrush(RGBConverter(bgColor, bcOpacity));
+        }
+        private void BackgroundOpacityLess_Click(object sender, RoutedEventArgs e)
+        {
+            if (bcOpacity <= 5)
+                bcOpacity = 0;
+            else
+                bcOpacity -= 25;
+            Color bgColor = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.ContentBackground);
+            mainContent.Background = new SolidColorBrush(RGBConverter(bgColor, bcOpacity));
+        }
+        private void BackgroundOpacityReset_Click(object sender, RoutedEventArgs e)
+        {
+            bcOpacity = 0;
+            Color bgColor = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.ContentBackground);
+            mainContent.Background = new SolidColorBrush(RGBConverter(bgColor, bcOpacity));
+        }
         private void Window_f9_KeyDown(object sender, KeyEventArgs e)
         {
-            if( e.Key == Key.F9)
+            if (e.Key == Key.F9)
                 this.toggleBorders_Click(sender, e);
         }
         private void NewWindow_Click(object sender, RoutedEventArgs e)
@@ -218,7 +253,7 @@ namespace ChatOverlay
         }
         private void Show_Window(object sender, RoutedEventArgs e)
         {
-            if( this.WindowState == WindowState.Minimized ) 
+            if (this.WindowState == WindowState.Minimized)
                 this.WindowState = WindowState.Normal;
             this.Topmost = true;
         }
@@ -234,23 +269,42 @@ namespace ChatOverlay
             Browser.Opacity = 1;
             // reset zoom
             Browser.ZoomLevel = 0;
+            // reset bcOpacity
+            bcOpacity = 0;
+            Color bgColor = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.ContentBackground);
+            mainContent.Background = new SolidColorBrush(RGBConverter(bgColor, bcOpacity));
+            // reset window width, height
+            this.Width = 400;
+            this.Height = 600;
         }
 
         private void Browser_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            if (Properties.Settings.Default.ChatType == "Custom")
+            {
+                url.Text = Browser.Address;
+            }
+            else
+            {
+                if (navigationUsed)
+                {
+                    Properties.Settings.Default.Username = previousUsername;
+                    previousUsername = url.Text;
+                }
 
+                url.Text = Properties.Settings.Default.Username;
+                navigationUsed = false;
+            }
         }
 
         private void Browser_FrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
 
-            InsertCustomJavaScript(InsertCustomCSS(Properties.Settings.Default.currentCss));
-            InsertCustomJavaScript(Properties.Settings.Default.currentJs);
+            InsertCustomJavaScript(Properties.Settings.Default.currentJs+ InsertCustomCSS(Properties.Settings.Default.currentCss));
         }
         private void Browser_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
-            //InsertCustomJavaScript(InsertCustomCSS(Properties.Settings.Default.currentCss));
-            //InsertCustomJavaScript(Properties.Settings.Default.currentJs);
+
         }
     }
 }

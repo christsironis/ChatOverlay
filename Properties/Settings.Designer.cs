@@ -142,5 +142,17 @@ namespace ChatOverlay.Properties {
                 this["currentJs"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string ContentBackground {
+            get {
+                return ((string)(this["ContentBackground"]));
+            }
+            set {
+                this["ContentBackground"] = value;
+            }
+        }
     }
 }

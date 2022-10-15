@@ -193,25 +193,30 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="5"/>
         </Style>
-
         <ContextMenu Background="White" x:Key="contextMenu">
             <MenuItem Header="Toggle Borders (F9)" Click="toggleBorders_Click" />
-            <MenuItem Header="New Window" Click="NewWindow_Click" />
+            <MenuItem Header="Opacity">
+                <MenuItem Header="+ Increase" Click="OpacityMore_Click" StaysOpenOnClick="True" />
+                <MenuItem Header="- Decrease" Click="OpacityLess_Click" StaysOpenOnClick="True" />
+                <MenuItem Header="Reset" Click="OpacityReset_Click" />
+            </MenuItem>
+            <MenuItem Header="Background Opacity">
+                <MenuItem Header="+ Increase" Click="BackgroundOpacityMore_Click" StaysOpenOnClick="True" />
+                <MenuItem Header="- Decrease" Click="BackgroundOpacityLess_Click" StaysOpenOnClick="True" />
+                <MenuItem Header="Reset" Click="BackgroundOpacityReset_Click" />
+            </MenuItem>
             <MenuItem Header="Zoom Level">
                 <MenuItem Header="+ Zoom In" Click="ZoomIn_Click" StaysOpenOnClick="True" />
                 <MenuItem Header="- Zoom Out" Click="ZoomOut_Click"  StaysOpenOnClick="True" />
                 <MenuItem Header="Reset" Click="ZoomReset_Click"/>
             </MenuItem>
-            <MenuItem Header="Opacity Level">
-                <MenuItem Header="+ Increase" Click="OpacityMore_Click" StaysOpenOnClick="True" />
-                <MenuItem Header="- Decrease" Click="OpacityLess_Click" StaysOpenOnClick="True" />
-                <MenuItem Header="Reset" Click="OpacityReset_Click" />
-            </MenuItem>
+            <MenuItem Header="New Window" Click="NewWindow_Click" />
+            <MenuItem Header="Reset Window" Click="ResetWindow_Click" />
         </ContextMenu>
 
     </Window.Resources>
 
-    <Border Name="topBorder" ContextMenu="{StaticResource contextMenu}" CornerRadius="5,5,0,0" BorderThickness="0,10,0,0" BorderBrush="Black" Background="Transparent" >
+    <Border Name="topBorder" ContextMenu="{StaticResource contextMenu}" CornerRadius="5,5,0,0" BorderThickness="0,10,0,0" BorderBrush="Black">
         <Grid x:Name="main" Background="Transparent" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="32.767" />
@@ -225,6 +230,9 @@
                     <ContextMenu Style="{StaticResource contextMenuTheme}" Background="White" x:Name="trayMenu">
                         <MenuItem Style="{StaticResource menuItemTheme}" Header="Hide/Show Border (F9)" Click="toggleBorders_Click" />
                         <MenuItem Style="{StaticResource menuItemTheme}" Header="Settings" Click="settings_Click" />
+                        <MenuItem Style="{StaticResource menuItemTheme}" Header="Reset Zoom" Click="ZoomReset_Click" />
+                        <MenuItem Style="{StaticResource menuItemTheme}" Header="Reset Opacity" Click="OpacityReset_Click" />
+                        <MenuItem Style="{StaticResource menuItemTheme}" Header="Reset Background Opacity" Click="BackgroundOpacityReset_Click" />
                         <MenuItem Style="{StaticResource menuItemTheme}" Header="Reset Window" Click="ResetWindow_Click" />
                         <Separator />
                         <MenuItem Style="{StaticResource menuItemTheme}" Header="Exit" Click="close_Click" />
@@ -232,7 +240,7 @@
                 </tb:TaskbarIcon.ContextMenu>
             </tb:TaskbarIcon>
 
-            <Border Name="border" Background="Black" BorderBrush="Black" BorderThickness="1"  Grid.Row="0" Grid.RowSpan="2">
+            <Border Name="border" Background="Black" BorderBrush="Black" BorderThickness="2"  Grid.Row="0" Grid.RowSpan="2">
 
                 <Grid x:Name="menuLine" Margin="0,0,0,0">
                     <Grid.RowDefinitions>
@@ -267,7 +275,7 @@
                             <ColumnDefinition Width="40" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox x:Name="url"     Grid.Column="0" KeyDown="url_KeyDown" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="url"     Grid.Column="0" BorderBrush="Black" BorderThickness="2,0,0,0" KeyDown="url_KeyDown" VerticalContentAlignment="Center"/>
                         <Button x:Name="back"     Grid.Column="1" Click="back_Click" Style="{StaticResource button}">↩</Button>
                         <Button x:Name="forward"  Grid.Column="2" Click="forward_Click" Style="{StaticResource button}">↪</Button>
                     </Grid>
@@ -278,7 +286,6 @@
                 <wpf:ChromiumWebBrowser x:Name="Browser" ZoomLevelIncrement="1" FrameLoadEnd="Browser_FrameLoadEnd" FrameLoadStart="Browser_FrameLoadStart"  AddressChanged="Browser_AddressChanged">
                 </wpf:ChromiumWebBrowser>
             </Border>
-            
         </Grid>
     </Border>
 </Window>
