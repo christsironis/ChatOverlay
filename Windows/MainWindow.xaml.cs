@@ -89,6 +89,9 @@ namespace ChatOverlay
 
             Color bgColor = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.ContentBackground);
             mainContent.Background = new SolidColorBrush(RGBConverter(bgColor, bcOpacity));
+
+            // force reload
+            Browser.Load(Browser.Address+" ");
         }
 
         private void back_Click(object sender, RoutedEventArgs e)
@@ -105,7 +108,8 @@ namespace ChatOverlay
             if (Browser.CanGoForward)
             {
                 navigationUsed = true;
-                Browser.Forward();;
+                Browser.Forward();
+                InsertCustomJavaScript(Properties.Settings.Default.currentJs + InsertCustomCSS(Properties.Settings.Default.currentCss));
             }
         }
 
@@ -182,10 +186,12 @@ namespace ChatOverlay
                 border.Visibility = Visibility.Hidden;
                 topBorder.BorderThickness = new Thickness(0);
                 mainContent.BorderThickness = new Thickness(0);
+                ResizeMode = ResizeMode.NoResize;
                 MainWindow.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
             }
             else
             {
+                ResizeMode = ResizeMode.CanResizeWithGrip;
                 border.Visibility = Visibility.Visible;
                 topBorder.BorderThickness = new Thickness(0, 10, 0, 0);
                 mainContent.BorderThickness = new Thickness(2);

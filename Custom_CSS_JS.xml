@@ -92,7 +92,7 @@
       let found = false; let timer = setInterval(()=>{if(found){clearInterval(timer);}
       document.querySelector(".Layout-sc-nxg1ff-0.iFaqlo.stream-chat-header").remove();
       document.querySelector(".Layout-sc-nxg1ff-0.kxZWcq").remove();
-      document.querySelectorAll(".Layout-sc-nxg1ff-0.gsjsMm.chat-room__content > .Layout-sc-nxg1ff-0 ").forEach( e => { e.remove(); found =true;} );},1000);
+      document.querySelectorAll(".Layout-sc-nxg1ff-0.gsjsMm.chat-room__content > .Layout-sc-nxg1ff-0 ").forEach( e => { e.remove(); found =true;} );},3000);
     </Twitch>
   </js>
 </root>
