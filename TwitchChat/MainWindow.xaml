@@ -1,0 +1,211 @@
+﻿<Window x:Class="TwitchChat.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:cefsharpwpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:local="clr-namespace:TwitchChat"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        Initialized="Window_Initialized"
+        Loaded="Window_Loaded"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        MinHeight="100"
+        MinWidth="100"
+        x:Name="AppWindow"
+        Height="600" Width="400">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Heavy"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#404040"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="close">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Heavy"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers >
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <ContextMenu Background="White" x:Key="contextMenu">
+            <MenuItem Header="Toggle Borders (F9)"  />
+            <MenuItem Header="New Widget"  />
+            <MenuItem Header="Zoom Level">
+                <MenuItem Header="+ Zoom In" StaysOpenOnClick="True" />
+                <MenuItem Header="- Zoom Out"  StaysOpenOnClick="True" />
+                <MenuItem Header="Reset" />
+            </MenuItem>
+            <MenuItem Header="Opacity Level">
+                <MenuItem Header="+ Increase" StaysOpenOnClick="True" />
+                <MenuItem Header="- Decrease"  StaysOpenOnClick="True" />
+                <MenuItem Header="Reset"  />
+            </MenuItem>
+            <Separator />
+        </ContextMenu>
+
+        <Style TargetType="{x:Type local:MainWindow}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <!-- Outer border with the drop shadow margin -->
+                        <Border Padding="{Binding OuterMarginSize, FallbackValue=0}" BorderBrush="Blue" BorderThickness="{Binding FlatBorderThickness}">
+
+                            <!-- Main window outline -->
+                            <Grid>
+
+                                <!-- Outer dragging border -->
+                                <Border Panel.ZIndex="2"
+                                        CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}"
+                                         />
+
+                                <!-- Opacity mask for corners on grid -->
+                                <Border x:Name="Container"
+                                        CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}" />
+
+                                <!-- Window border and drop shadow -->
+                                <Border CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}"
+                                    >
+                                    <Border.Effect>
+                                        <DropShadowEffect ShadowDepth="0.5" Opacity="0.2" />
+                                    </Border.Effect>
+                                </Border>
+
+                                <!-- The main window content -->
+                                <Grid>
+
+                                    <Grid.RowDefinitions>
+
+                                        <!-- Window Content -->
+                                        <RowDefinition Height="30" />
+
+                                        <RowDefinition Height="*" />
+
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Title Bar -->
+                                    <Grid Grid.Column="0" Background="Black" Panel.ZIndex="1">
+
+                                        <Grid.ColumnDefinitions>
+                                            <!-- Windows Button -->
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="1.5*" />
+                                            <ColumnDefinition Width="Auto" />
+
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <Button x:Name="settings" Command="{Binding Settings}" Margin="0 0 10 0" WindowChrome.IsHitTestVisibleInChrome="True">
+                                                <Image Source="Images\SettingsButton.png" Width="Auto" Height="20" />
+                                            </Button>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" Margin="10 0 0 0" Orientation="Horizontal">
+                                            <TextBlock Foreground="White" FontSize="20" VerticalAlignment="Center" Text="MainWindow"/>
+                                        </StackPanel>
+
+                                        <!-- Window Buttons -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Button Command="{Binding MinimizeCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Content="__" />
+                                            <Button Command="{Binding MaximizeCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Content="[ ]" />
+                                            <Button Style="{StaticResource close}" Command="{Binding CloseCommand}"  WindowChrome.IsHitTestVisibleInChrome="True" Content="X" />
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                    <!-- Page Content -->
+                                    <Border Grid.Row="1" Padding="{Binding InnerContentPadding}" ClipToBounds="True">
+                                        <ContentPresenter Content="{TemplateBinding Content}" />
+                                    </Border>
+
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome 
+            ResizeBorderThickness="{Binding ResizeBorderThickness}"
+            CaptionHeight="{Binding TitleHeight}"
+            CornerRadius="0"
+            GlassFrameThickness="0"
+            />
+    </WindowChrome.WindowChrome>
+
+    <Border x:Name="border" Background="White">
+        <Grid x:Name="borderGrid">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" x:Name="ExpandStack" Background="Black">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <!--<ColumnDefinition Width="*"/>-->
+                </Grid.ColumnDefinitions>
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="Back" Click="Back_Click" Content="&lt;" ></Button>
+                        <Button x:Name="Forward" Click="Forward_Click" Content="&gt;"></Button>
+                    </StackPanel>
+                    <TextBox Grid.Column="1" x:Name="AddressText" Text="www.twitch.com" KeyDown="AddressText_KeyDown" Height="25" FontSize="15" WindowChrome.IsHitTestVisibleInChrome="True" Background="White"/>
+                    <Button Grid.Column="2" Click="search_Click" Margin="6 0 0 0" Width="30" x:Name="search" BorderBrush="White" BorderThickness="2" WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Image Source="Images\Search.png" Height="23"/>
+                    </Button>
+                </Grid>
+                <StackPanel Orientation="Horizontal">
+
+                </StackPanel>
+            </Grid>
+            <Image x:Name="loading" Grid.Row="1"  gif:ImageBehavior.AnimatedSource="Images\Loading.gif" gif:ImageBehavior.RepeatBehavior="0:2:0" Width="100" Panel.ZIndex="2"/>
+
+            <cefsharpwpf:ChromiumWebBrowser LoadingStateChanged="browser_LoadingStateChanged" AddressChanged="browser_AddressChanged" x:Name="browser" FrameLoadStart="ChromiumWebBrowser_FrameLoadStart" FrameLoadEnd="ChromiumWebBrowser_FrameLoadEnd" Grid.Row="1"></cefsharpwpf:ChromiumWebBrowser>
+
+        </Grid>
+    </Border>
+
+</Window>
