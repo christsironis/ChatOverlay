@@ -2,7 +2,7 @@
 
 .NET Framework application for Windows that will display chat messages from sites like Twitch, Trovo and any other site you want, on top of a **windowed** or **borderless** windowed game. Typically would be used by single monitor streamers who need to see chat while playing. Requires .NET Framework 4.6.1 or higher
 
-![Screenshot](https://imgur.com/a/HQCsiHB)
+![Screenshot](https://imgur.com/a/tHw4IsH)
 
 ## Installation and Usage
 * Download the latest release from https://github.com/christsironis/ChatOverlay/releases and launch the ChatOverlay.exe.
@@ -18,6 +18,6 @@
 * Custom which you can use your own site and add the css and js you want.
 
 Also you can add your own CSS and JS and open as many windows you want.
-![Screenshot](https://imgur.com/a/HQCsiHB)
+![Screenshot](https://imgur.com/a/onVHfnv)
 
 
